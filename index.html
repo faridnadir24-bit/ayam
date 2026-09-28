@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sistem Peternakan Tanpa Limbah</title>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#eef2ea;--ink:#1c2b22;--mut:#5d6f63;--rule:#cdd8c8;--paper:#f8faf5;--ok:#3f8f5a;--warn:#c99512;--bad:#c8402f;--blue:#3a78b5;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141c17;--ink:#e3ece5;--mut:#93a698;--rule:#2c3a31;--paper:#1b261f}}
+:root[data-theme="dark"]{--bg:#141c17;--ink:#e3ece5;--mut:#93a698;--rule:#2c3a31;--paper:#1b261f}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "Familjen Grotesk",system-ui,sans-serif;font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+main{max-width:1120px;margin:0 auto;padding:22px 18px 40px}
+.top{display:flex;justify-content:space-between;gap:16px;align-items:baseline;flex-wrap:wrap}
+h1{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--mut);font-size:13px}
+.lead{margin:22px 0 4px;font-size:clamp(22px,4.4vw,34px);line-height:1.15;font-weight:600;letter-spacing:-.02em;max-width:24em}
+.lead2{color:var(--mut);margin-bottom:16px;min-height:1.5em}
+.btn{font:inherit;font-size:13px;border:1px solid var(--ink);background:none;color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer}
+.btn:hover{background:var(--ink);color:var(--bg)}
+.scene{border-radius:10px;overflow-x:auto;background:#cfe3ea;border:1px solid var(--rule)}
+.scene svg{display:block;min-width:680px;width:100%;height:auto}
+.scene text{font-family:inherit}
+.cv{font-size:24px;font-weight:700;fill:#1c2b22}.cl{font-size:13px;fill:#3d5145}.pl{font-size:12px;fill:#3d5145}
+.wall{transition:fill 1s}
+.bob{animation:bob 1.1s ease-in-out infinite;transform-box:fill-box}
+.sick .bob{animation:slump 3.5s ease-in-out infinite}.sick .body{fill:#cbc6b6}
+@keyframes bob{50%{transform:translateY(-4px)}}@keyframes slump{50%{transform:translateY(3px)}}
+.haze{transition:opacity 1.5s;opacity:0}
+.fan{transform-origin:550px 180px}.on .fan{animation:spin .45s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.air{opacity:0}.on .air{animation:blow 1s linear infinite}
+@keyframes blow{from{transform:translateX(0);opacity:.9}to{transform:translateX(60px);opacity:0}}
+.flame{transform-origin:745px 312px;animation:fl .35s ease-in-out infinite alternate}
+@keyframes fl{to{transform:scale(.9,1.18)}}
+.puff{transform-box:fill-box;transform-origin:center;animation:puff 4s linear infinite}
+@keyframes puff{from{transform:translateY(0) scale(.6);opacity:.55}to{transform:translateY(-50px) scale(1.5);opacity:0}}
+.flow,.back{animation:none;opacity:.3}
+.out .flow{animation:dash 1s linear infinite;opacity:1}.in .back{animation:dash 1s linear infinite reverse;opacity:1}
+.gr{opacity:0}.out .go{opacity:1;animation:mv 2.4s linear infinite}.in .gi{opacity:1;animation:mvb 2.4s linear infinite}
+@keyframes mv{to{transform:translateX(138px)}}@keyframes mvb{to{transform:translateX(-138px)}}
+@keyframes dash{to{stroke-dashoffset:-18}}
+.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:34px;margin-top:30px}
+@media(max-width:860px){.cols{grid-template-columns:1fr;gap:26px}}
+section{border-top:1px solid var(--rule);padding-top:12px;margin-bottom:26px}
+h2{font-size:15px;font-weight:700;margin-bottom:8px}
+.note{color:var(--mut);font-size:13px;margin-top:6px}
+.chart{position:relative;height:220px}
+.bar{height:10px;background:var(--rule);border-radius:5px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;transition:width .8s,background .8s}
+.big{font-size:22px;font-weight:600;letter-spacing:-.01em}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;padding:7px 8px 7px 0;border-bottom:1px solid var(--rule)}
+th small{display:block;color:var(--mut);font-size:12px}
+td{padding:7px 6px;border-bottom:1px solid var(--rule)}
+td.n{font-weight:600;white-space:nowrap}
+tr.grp th{font-weight:700;padding-top:14px;border-bottom:2px solid var(--ink)}
+.tr{position:relative;height:6px;background:var(--rule);border-radius:3px;min-width:70px}
+.sf{position:absolute;top:0;bottom:0;background:var(--ok);opacity:.45;border-radius:3px}
+.mk{position:absolute;top:-4px;width:4px;height:14px;background:var(--ink);border-radius:2px;transition:left .8s}
+.s{font-weight:600;white-space:nowrap}.s0{color:var(--ok)}.s1{color:var(--warn)}.s2{color:var(--bad)}
+.log{list-style:none;padding:0;max-height:230px;overflow:auto}
+.log li{padding:6px 0 6px 12px;border-left:4px solid var(--blue);margin-bottom:5px;font-size:13px}
+.log li.w{border-color:var(--warn)}.log li.e{border-color:var(--bad)}
+.log time{color:var(--mut);margin-right:6px}
+details{margin-top:8px}summary{cursor:pointer;font-weight:600}
+label{display:flex;justify-content:space-between;font-size:13px;margin-top:12px}
+input[type=range]{width:100%;accent-color:var(--ok)}
+.eco{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.eco div{padding:0 14px;border-left:1px solid var(--rule)}.eco div:first-child{padding-left:0;border:0}
+.eco b{display:block;font-size:22px;letter-spacing:-.01em}.eco span{color:var(--mut);font-size:13px}
+@media(max-width:700px){.eco{grid-template-columns:1fr 1fr;row-gap:16px}.eco div:nth-child(3){padding-left:0;border:0}}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.seg{display:flex;align-items:center;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.seg span{padding:5px 10px;font-size:13px;color:var(--mut)}
+.seg button{font:inherit;font-size:13px;border:0;border-left:1px solid var(--rule);background:none;color:var(--ink);padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed=true],.btn[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><h1>Sistem Peternakan Tanpa Limbah</h1><span class="sub">Integrasi pirolisis dan AI untuk kesejahteraan ternak dan kelestarian lingkungan · prototype, data simulasi</span></div>
+<p class="lead" id="lead">Memuat data kandang…</p>
+<p class="lead2" id="lead2"></p>
+<div class="ctl"><div class="seg" role="group" aria-label="Mode ventilasi"><span>Ventilasi</span><button data-m="auto" aria-pressed="true">Otomatis</button><button data-m="on" aria-pressed="false">Nyala</button><button data-m="off" aria-pressed="false">Mati</button></div><div class="seg" role="group" aria-label="Kecepatan simulasi"><span>Kecepatan</span><button data-s="1" aria-pressed="true">1x</button><button data-s="3" aria-pressed="false">3x</button><button data-s="8" aria-pressed="false">8x</button></div><button class="btn" id="pause" aria-pressed="false">Jeda</button><button class="btn" id="spike">Uji lonjakan amonia</button></div>
+
+<div class="scene"><svg id="sc" viewBox="0 0 960 400" role="img" aria-label="Penampang kandang ayam, reaktor pirolisis, dan jalur litter yang saling terhubung">
+<defs><filter id="bl"><feGaussianBlur stdDeviation="14"/></filter></defs>
+<rect width="960" height="400" fill="#cfe3ea"/>
+<circle cx="880" cy="60" r="26" fill="#f4dc8a"/>
+<rect y="330" width="960" height="70" fill="#9db37f"/>
+<polygon points="30,125 300,75 570,125" fill="#8a6f4e"/>
+<rect class="wall" id="wall" x="50" y="125" width="500" height="205" fill="#d9e8cc"/>
+<rect x="50" y="125" width="500" height="205" fill="none" stroke="#5c4a36" stroke-width="4"/>
+<rect x="80" y="160" width="60" height="40" fill="#e7f3f8" stroke="#5c4a36" stroke-width="3"/>
+<rect x="400" y="160" width="60" height="40" fill="#e7f3f8" stroke="#5c4a36" stroke-width="3"/>
+<rect id="litter" x="52" y="300" width="496" height="28" fill="#2f2f2f"/>
+<g class="haze" id="hz" filter="url(#bl)"><ellipse cx="150" cy="240" rx="90" ry="40" fill="#6f6a5a"/><ellipse cx="300" cy="220" rx="110" ry="45" fill="#6f6a5a"/><ellipse cx="450" cy="245" rx="90" ry="40" fill="#6f6a5a"/></g>
+<g id="hens"></g>
+<rect x="298" y="225" width="4" height="75" fill="#555"/><circle cx="300" cy="225" r="6" fill="#3a78b5"/>
+<circle cx="550" cy="180" r="24" fill="#e8ecee" stroke="#5c4a36" stroke-width="4"/>
+<g class="fan"><path d="M550 180l-4-20h8zM550 180l17 10-4 7zM550 180l-17 10 4 7z" fill="#5c6b73"/></g>
+<g stroke="#fff" stroke-width="3" stroke-linecap="round"><line class="air" x1="585" y1="165" x2="625" y2="165"/><line class="air" x1="585" y1="180" x2="635" y2="180" style="animation-delay:-.3s"/><line class="air" x1="585" y1="195" x2="625" y2="195" style="animation-delay:-.6s"/></g>
+<rect x="700" y="170" width="90" height="160" fill="#6b7a80"/><rect x="735" y="110" width="20" height="62" fill="#59676d"/>
+<rect x="722" y="270" width="46" height="42" rx="3" fill="#2a2622"/>
+<path class="flame" d="M745 310q-11-18 0-34 4 12 12 6 8 14-12 28z" fill="#e8892b"/>
+<circle class="puff" cx="745" cy="105" r="10" fill="#e5e9e8"/><circle class="puff" cx="748" cy="105" r="10" fill="#e5e9e8" style="animation-delay:-2s"/>
+<g stroke-width="6" fill="none" stroke-dasharray="10 8"><line class="flow" x1="550" y1="314" x2="700" y2="314" stroke="#3b3b3b"/><line class="back" x1="700" y1="290" x2="550" y2="290" stroke="#e8b94a"/></g>
+<g fill="#2f2f2f"><circle class="gr go" cx="556" cy="314" r="5"/><circle class="gr go" cx="556" cy="314" r="5" style="animation-delay:-.8s"/><circle class="gr go" cx="556" cy="314" r="5" style="animation-delay:-1.6s"/></g><g fill="#e8b94a" stroke="#5c4a36"><circle class="gr gi" cx="694" cy="290" r="5"/><circle class="gr gi" cx="694" cy="290" r="5" style="animation-delay:-.8s"/><circle class="gr gi" cx="694" cy="290" r="5" style="animation-delay:-1.6s"/></g>
+<text class="pl" x="625" y="308" text-anchor="middle">litter jenuh ke reaktor</text>
+<text class="pl" x="625" y="282" text-anchor="middle">biochar baru ke kandang</text>
+<g stroke="#3d5145" stroke-width="1"><line x1="78" y1="70" x2="90" y2="255"/><line x1="300" y1="70" x2="300" y2="310"/><line x1="500" y1="70" x2="546" y2="158"/><line x1="745" y1="70" x2="745" y2="108"/></g>
+<text class="cv" x="40" y="36" id="cN">-</text><text class="cl" x="40" y="56">Amonia setinggi ayam</text>
+<text class="cv" x="262" y="36" id="cL">-</text><text class="cl" x="262" y="56">Sisa daya serap litter</text>
+<text class="cv" x="455" y="36" id="cV">-</text><text class="cl" x="455" y="56">Ventilasi</text>
+<text class="cv" x="700" y="36" id="cR">-</text><text class="cl" x="700" y="56">Suhu reaktor</text>
+</svg></div>
+
+<div class="cols">
+<div>
+<section><h2>Amonia: aktual dan prediksi 1 jam ke depan</h2>
+<div class="chart"><canvas id="cNh3"></canvas></div>
+<p class="note" id="ml">-</p><p class="note">Model regresi ML dengan R² = 0,976. Input: suhu, kelembaban, kecepatan udara. Area biru pada grafik menandai saat ventilasi menyala.</p></section>
+<section><h2>Litter biochar</h2>
+<div class="big" id="lTxt">-</div><div class="bar"><i id="lBar"></i></div><p id="lRec">-</p>
+<div class="chart" style="height:130px;margin-top:8px"><canvas id="cCap"></canvas></div></section>
+</div>
+<div>
+<section><h2>Bacaan sensor</h2>
+<table><tbody id="rows"></tbody></table><p class="note" id="sensN">-</p>
+<details><summary>Atur batas aman</summary>
+<label>Batas amonia <b id="tv1">20 ppm</b></label><input type="range" id="th1" min="10" max="40" value="20" aria-label="Batas amonia">
+<label>Suhu kandang maksimum <b id="tv2">24 °C</b></label><input type="range" id="th2" min="20" max="32" value="24" aria-label="Suhu maksimum">
+<label>Kelembaban maksimum <b id="tv3">70 %</b></label><input type="range" id="th3" min="55" max="90" value="70" aria-label="Kelembaban maksimum"></details></section>
+<section><h2>Riwayat kejadian</h2><ul class="log" id="alerts"></ul></section>
+</div></div>
+
+<section><h2>Dampak sejak siklus dimulai</h2>
+<div class="eco"><div><b id="eB">-</b><span>biochar dihasilkan</span></div><div><b id="eA">-</b><span>amonia terserap</span></div><div><b id="eR">-</b><span>hemat litter kimia</span></div><div><b id="eC">-</b><span>emisi CO2 ditekan</span></div></div></section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const f1=(v,d=1)=>v.toLocaleString('id-ID',{minimumFractionDigits:d,maximumFractionDigits:d});
+const S={nh3:7,t:22,h:58,air:.6,cap:100,vent:0,ventOn:false,rt:400,p:1.4,f:2.1,gv:62,bio:120,abs:0,prev:7};
+const NP=30,lab=[],real=[],pred=[],lim_=[],capH=[],capL=[],vent=[];
+const lim=()=>+$('th1').value;
+const sc=$('sc');
+// ayam
+const hens=$('hens');
+[90,165,240,345,420,490].forEach((x,i)=>{hens.insertAdjacentHTML('beforeend',`<g transform="translate(${x} 300)"><g class="bob" style="animation-delay:${-i*.27}s"><path d="M-16-18l-10-8 4 14z" fill="#e6e2d4"/><ellipse class="body" cx="0" cy="-14" rx="17" ry="12" fill="#f5f3ea"/><circle cx="14" cy="-28" r="7" fill="#f5f3ea"/><path d="M11-35q3-6 6 0z" fill="#c8402f"/><path d="M20-28l6 2-6 2z" fill="#e8a02b"/><circle cx="16" cy="-29" r="1.3" fill="#222"/><path d="M-3-3v8M4-3v8" stroke="#e8a02b" stroke-width="2"/></g></g>`)});
+function log(cls,msg){
+  const li=document.createElement('li');li.className=cls;
+  li.innerHTML=`<time>${new Date().toLocaleTimeString('id-ID')}</time><b>${cls=='e'?'Emergency':cls=='w'?'Warning':'Info'}</b> ${msg}`;
+  $('alerts').prepend(li);while($('alerts').children.length>25)$('alerts').lastChild.remove();
+}
+const co={responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{boxWidth:12,font:{size:12}}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:5,font:{size:10}}},y:{grid:{color:'#8883'},ticks:{font:{size:11}}}}};
+Chart.defaults.color='#7a8a80';
+const vp={id:'vp',beforeDatasetsDraw(c){const{ctx,chartArea:a,scales:{x}}=c;ctx.save();ctx.fillStyle='#3a78b533';vent.forEach((v,i)=>{if(!v)return;const l=Math.max(a.left,x.getPixelForValue(i-.5)),r=Math.min(a.right,x.getPixelForValue(i+.5));ctx.fillRect(l,a.top,r-l,a.bottom-a.top)});ctx.restore()}};
+const cNh3=new Chart($('cNh3'),{type:'line',data:{labels:lab,datasets:[{label:'NH3 aktual (ppm)',data:real,borderColor:'#3f8f5a',tension:.35,pointRadius:0,borderWidth:2},{label:'Prediksi ML',data:pred,borderColor:'#3a78b5',borderDash:[5,4],tension:.35,pointRadius:0,borderWidth:2},{label:'Batas aman',data:lim_,borderColor:'#c8402f',borderWidth:1,pointRadius:0}]},options:co,plugins:[vp]});
+const cCap=new Chart($('cCap'),{type:'line',data:{labels:capL,datasets:[{label:'Daya serap tersisa (%)',data:capH,borderColor:'#c99512',backgroundColor:'#c9951222',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},options:{...co,scales:{...co.scales,y:{min:0,max:100,grid:{color:'#8883'},ticks:{font:{size:11}}}}}});
+
+function step(){
+  S.prev=S.nh3;const L=lim();S.flowIn=Math.max(0,(S.flowIn||0)-1);
+  const rate=rnd(.28,.4);S.cap-=rate;
+  const rise=.35+(100-S.cap)*.012+rnd(-.1,.15);
+  if(vmode=='auto'&&S.nh3>L&&!S.ventOn){S.ventOn=true;log('e',`Konsentrasi NH3 ${f1(S.nh3,0)} ppm. Ventilasi diaktifkan otomatis.`)}
+  if(vmode=='on')S.ventOn=true;if(vmode=='off')S.ventOn=false;
+  S.vent=S.ventOn?Math.min(1,S.vent+.4):Math.max(0,S.vent-.5);
+  S.nh3=Math.max(4,S.nh3+rise-S.vent*2.4);
+  if(vmode=='auto'&&S.ventOn&&S.nh3<L*.62){S.ventOn=false;log('i',`NH3 turun ke ${f1(S.nh3)} ppm. Ventilasi dimatikan.`)}
+  S.abs+=rate*.045;
+  S.t=Math.max(18,Math.min(30,S.t+rnd(-.3,.35)-(S.vent?.25:0)));
+  S.h=Math.max(45,Math.min(85,S.h+rnd(-1,1.2)-(S.vent?.8:0)));
+  S.air=S.vent?rnd(1.6,2.2):rnd(.3,.8);
+  S.rt=400+rnd(-9,9);S.p=1.4+rnd(-.12,.12);S.f=2.1+rnd(-.25,.25);S.gv=Math.min(95,Math.max(40,S.gv+rnd(-2,2.5)));
+  S.bio+=rnd(.05,.12);
+  if(S.cap<=4){S.cap=100;S.flowIn=7;log('i','Litter jenuh dikirim ke reaktor. Biochar baru dipasang, daya serap kembali 100%.')}
+  if(S.cap<20&&S.cap>19.4)log('w','Daya serap litter di bawah 20%. Siapkan biochar baru.');
+  if(Math.random()<.16){const m=[['i','Semua sensor tersinkronisasi.'],['w','Kelembaban naik, litter perlu dipantau.'],['i','Model prediksi diperbarui dengan data terbaru.'],['w','Suhu reaktor berfluktuasi, dikoreksi otomatis.']][Math.floor(Math.random()*4)];log(m[0],m[1])}
+  render(1);
+}
+function row(name,sub,val,unit,st,min,max,a,b,words){
+  const pc=v=>Math.max(0,Math.min(100,(v-min)/(max-min)*100));
+  return `<tr><th scope="row">${name}<small>${sub}</small></th><td class="n">${f1(val,unit=='bar'||unit=='m³/jam'?2:1)} ${unit}</td><td><div class="tr"><i class="sf" style="left:${pc(a)}%;width:${pc(b)-pc(a)}%"></i><b class="mk" style="left:calc(${pc(val)}% - 2px)"></b></div></td><td class="s s${st}">${words[st]}</td></tr>`;
+}
+function render(tick){
+  const L=lim(),TM=+$('th2').value,HM=+$('th3').value,n=S.nh3;
+  const sN=n<L?0:n<L*1.25?1:2;
+  const thi=.8*S.t+S.h/100*(S.t-14.4)+46.4;
+  const sT=S.t>TM+3||S.t<15?2:S.t>TM||S.t<18?1:0, sH=S.h>HM+10||S.h<40?2:S.h>HM||S.h<50?1:0, sI=thi<72?0:thi<78?1:2;
+  const dev=Math.abs(S.rt-400),sR=dev<12?0:dev<25?1:2;
+  // scene
+  sc.setAttribute('class',(S.ventOn?'on ':'')+(sN==2?'sick':'')+(S.cap<20?' out':'')+(S.flowIn>0?' in':''));
+  $('wall').setAttribute('fill',['#d9e8cc','#f1e1a0','#ecbdb4'][sN]);
+  $('hz').style.opacity=Math.max(0,Math.min(.8,(n-L*.65)/(L*.7)));
+  const k=Math.max(0,Math.min(1,S.cap/100));
+  $('litter').setAttribute('fill',`hsl(28,${8+34*(1-k)}%,${20+24*(1-k)}%)`);
+  $('cN').textContent=f1(n)+' ppm';$('cL').textContent=f1(S.cap,0)+'%';$('cV').textContent=S.ventOn?'Menyala':'Mati';$('cR').textContent=f1(S.rt,0)+' °C';
+  // kalimat utama
+  const ticks=Math.max(0,(S.cap-4)/.34),min=Math.round(ticks*10);
+  $('lead').textContent=sN==0?`Udara kandang aman. Amonia ${f1(n)} ppm, di bawah batas ${L} ppm.`:sN==1?`Amonia ${f1(n)} ppm mendekati batas ${L} ppm. Ventilasi ${S.ventOn?'sudah menyala':vmode=='off'?'dimatikan manual':'siap menyala'}.`:`Amonia ${f1(n)} ppm melewati batas ${L} ppm. Ayam mulai tertekan, ${S.ventOn?'kipas ventilasi menyala.':'ventilasi masih mati.'}`;
+  $('lead2').textContent=`Litter biochar tersisa ${f1(S.cap,0)}% daya serap dan diperkirakan jenuh dalam ${Math.floor(min/60)} jam ${min%60} menit.${S.cap<20?' Litter jenuh sedang dikirim ke reaktor.':S.flowIn>0?' Biochar baru sedang dipasang ke kandang.':''}`;
+  // tabel
+  const W=['Normal','Waspada','Bahaya'],R=['Optimal','Waspada','Kritis'];
+  $('rows').innerHTML=`<tr class="grp"><th colspan="4">Udara kandang</th></tr>`+
+   row('Amonia (NH3)',`aman di bawah ${L} ppm`,n,'ppm',sN,0,40,0,L,W)+
+   row('Suhu kandang',`ideal 18-${TM} °C`,S.t,'°C',sT,10,35,18,TM,W)+
+   row('Kelembaban',`ideal 50-${HM}%`,S.h,'%',sH,30,100,50,HM,W)+
+   row('Indeks THI','aman di bawah 72',thi,'',sI,55,90,55,72,W)+
+   `<tr class="grp"><th colspan="4">Reaktor pirolisis</th></tr>`+
+   row('Suhu reaktor','target 400 °C untuk CEC',S.rt,'°C',sR,350,450,388,412,R)+
+   row('Tekanan','1,2-1,6 bar',S.p,'bar',S.p<1.2||S.p>1.6?1:0,.8,2,1.2,1.6,R)+
+   row('Aliran gas','1,8-2,4 m³/jam',S.f,'m³/jam',S.f<1.8||S.f>2.4?1:0,1,3,1.8,2.4,R)+
+   row('Volume gas','40-90%',S.gv,'%',0,0,100,40,90,R);
+  $('sensN').textContent=`8 dari 8 sensor aktif. ${paused?'Simulasi dijeda.':'Data diperbarui tiap '+f1(4/speed)+' detik.'}`;
+  // litter
+  $('lTxt').textContent=`Jenuh dalam ${Math.floor(min/60)} jam ${min%60} menit`;
+  $('lBar').style.width=S.cap+'%';$('lBar').style.background=S.cap>50?'var(--ok)':S.cap>20?'var(--warn)':'var(--bad)';
+  $('lRec').textContent=S.cap>50?'Litter masih optimal.':S.cap>20?'Daya serap menurun. Mulai jadwalkan biochar baru.':'Segera siapkan biochar baru.';
+  // ML
+  const p=Math.max(3,n+(n-S.prev)*3+(S.t-22)*.15+(S.h-60)*.06-(S.air-.6)*1.2+rnd(-.3,.3));
+  $('ml').textContent=`Input saat ini: ${f1(S.t)} °C, ${f1(S.h,0)}%, ${f1(S.air)} m/s. Prediksi NH3 satu jam lagi: ${f1(p)} ppm.`;
+  // dampak
+  $('eB').textContent=f1(S.bio)+' kg';$('eA').textContent=f1(S.abs,2)+' kg';
+  $('eR').textContent='Rp '+Math.round(S.bio*4500+S.abs*12000).toLocaleString('id-ID');$('eC').textContent=f1(S.bio*1.9)+' kg';
+  if(!tick){lim_.fill(L);cNh3.update();return}
+  const tl=new Date().toLocaleTimeString('id-ID',{minute:'2-digit',second:'2-digit'});
+  lab.push(tl);real.push(+n.toFixed(1));pred.push(+p.toFixed(1));lim_.push(L);capL.push(tl);capH.push(+S.cap.toFixed(1));vent.push(S.ventOn?1:0);
+  [lab,real,pred,lim_,capL,capH,vent].forEach(a=>{if(a.length>NP)a.shift()});
+  cNh3.update();cCap.update();
+}
+[['th1','tv1',' ppm'],['th2','tv2',' °C'],['th3','tv3',' %']].forEach(([a,b,u])=>$(a).oninput=e=>{$(b).textContent=e.target.value+u;render()});
+let vmode='auto',speed=1,paused=false,tm;
+const grp=(sel,b)=>document.querySelectorAll(sel).forEach(x=>x.setAttribute('aria-pressed',x===b));
+function sched(){clearInterval(tm);if(!paused)tm=setInterval(step,4000/speed)}
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{vmode=b.dataset.m;grp('[data-m]',b);if(vmode=='on')S.ventOn=true;if(vmode=='off')S.ventOn=false;log('i','Ventilasi: '+{auto:'mode otomatis',on:'dinyalakan manual',off:'dimatikan manual'}[vmode]+'.');render()});
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{speed=+b.dataset.s;grp('[data-s]',b);sched();render()});
+$('pause').onclick=()=>{paused=!paused;$('pause').setAttribute('aria-pressed',paused);$('pause').textContent=paused?'Lanjutkan':'Jeda';sched();render()};
+$('spike').onclick=()=>{S.nh3+=9;log('w','Lonjakan amonia disimulasikan (+9 ppm).');render()};
+for(let i=0;i<3;i++)step();
+log('i','Sistem dimulai. Semua sensor aktif.');
+sched();
+</script>
+</body>
+</html>
